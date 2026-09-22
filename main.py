@@ -28,18 +28,20 @@ async def lifespan(app: FastAPI):
             # Ensure admin collection is initialized
             admin_col = get_admin_collection()
             if admin_col.count_documents({}) == 0:
-                import hashlib, secrets
-                salt = secrets.token_hex(16)
-                pw_hash = hashlib.pbkdf2_hmac("sha256", b"9597535555R", salt.encode("utf-8"), 100000).hex()
-                admin_col.insert_one({
-                    "email": "srenewaanandabavan@gmail.com",
-                    "password_hash": pw_hash,
-                    "salt": salt,
-                    "name": "Sre New Aananda Bavan Admin",
-                    "role": "Administrator",
-                    "created_at": datetime.now(timezone.utc).isoformat()
-                })
-                logger.info("Initialized default administrator account in MongoDB Atlas.")
+                admin_pass = os.getenv("ADMIN_PASSWORD")
+                if admin_pass:
+                    import hashlib, secrets
+                    salt = secrets.token_hex(16)
+                    pw_hash = hashlib.pbkdf2_hmac("sha256", admin_pass.encode("utf-8"), salt.encode("utf-8"), 100000).hex()
+                    admin_col.insert_one({
+                        "email": settings.ADMIN_EMAIL,
+                        "password_hash": pw_hash,
+                        "salt": salt,
+                        "name": "Sre New Aananda Bavan Admin",
+                        "role": "Administrator",
+                        "created_at": datetime.now(timezone.utc).isoformat()
+                    })
+                    logger.info("Initialized default administrator account in MongoDB Atlas.")
 
             # Ensure default restaurant settings exist
             settings_col = get_settings_collection()
