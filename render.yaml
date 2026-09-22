@@ -8,8 +8,12 @@ services:
       - key: PORT
         value: 10000
       - key: MONGODB_URI
-        value: mongodb+srv://srenewaanandabavan_db_user:9597535555R@srenewaanandbavan.3cbwvyn.mongodb.net/?appName=srenewaanandbavan
+        sync: false
       - key: DATABASE_NAME
         value: srenewaanandbavan
       - key: ADMIN_EMAIL
         value: srenewaanandbavan@gmail.com
+      - key: JWT_SECRET
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
